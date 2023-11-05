@@ -1,0 +1,53 @@
+body{
+    margin:0;
+    padding:0;
+    background-color: #777777;
+}
+*{
+    margin-left: 0;
+}
+
+.container{
+    display: flex;
+    flex-direction: row;
+    gap: 100px;
+}
+h1{
+    width: auto;
+    background: #949494;
+}
+
+.process{
+    width: fit-content;
+    border: 2px solid black;
+    padding: 10px;
+}
+.process p{
+    text-align: center;
+    font-size: large;
+    font-weight: bold;
+}
+.inputs div{
+    display: flex;
+    justify-content: space-between;
+    gap:5px;
+}
+.inputs{
+    display: flex;
+    flex-direction: column;
+    gap:5px;
+    width: fit-content;
+}
+
+@media screen and (max-width: 600px){
+    .container{
+        flex-direction: column;
+        gap: 20px;
+    }
+    .process{
+        width: 100%;
+    }
+    .inputs{
+        width: 100%;
+    }
+}

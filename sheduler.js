@@ -19,7 +19,7 @@ function add(){
     var row1="<td>"+item.name+"</td>";
     var row2="<td>"+item.burst+"</td>";
     var row3="<td>"+item.arrival+"</td>";
-    var row4="<td><canvas style=\"background: "+item.pColour+";height:30px;width:60px; border: solid;\"></canvas></td>"
+    var row4="<td><canvas style=\"background: "+item.pColour+";height:15px;width:30px; border: solid;\"></canvas></td>"
 
     $("#iProcessTbl").append("<tr id=\"trele\">"+row1+row2+row3+row4+"</tr>");
    // $("#td").text(item.name+" "+ item.burst+ " " + item.arrival);
@@ -29,6 +29,10 @@ function scheduleProcesses() {
 
     if (selectedAlgorithm === "FJFS") {
         fjfsNP();
+    }
+    else if(selectedAlgorithm === "SJF"){
+        sjfScheduling();
+
     } else {
         shedule()
     }
@@ -196,4 +200,44 @@ let fjfsNP = async () => {
     }
 
     console.log("stopped");
+}
+let sjfScheduling = async () => {
+    $("#_sim").empty();
+    await timeout(500);
+    time = 0;
+
+    var pQueue = JSON.parse(JSON.stringify(pQueueBig));
+    pQueue.sort((a, b) => (a.arrival > b.arrival) ? 1 : -1);
+
+    console.log("SJF scheduling started");
+    console.log(pQueue);
+
+    while (pQueue.length > 0 || readyQueue.length > 0) {
+        time = time + 1;
+        console.log(time);
+
+        while (pQueue.length > 0 && pQueue[0].arrival <= time) {
+            readyQueue.push(pQueue.shift());
+        }
+
+        if (pQueue.length == 0 && readyQueue.length == 0) break;
+
+        if (readyQueue.length > 0) {
+            readyQueue.sort((a, b) => (a.burst > b.burst) ? 1 : -1); // Sort by burst time (shortest first)
+            readyQueue[0].runtime += 1;
+            readyQueue[0].total += 1;
+            addItem(readyQueue[0].pColour);
+            console.log("Running " + readyQueue[0].name);
+            readyQueue[0].burst -= 1;
+            if (readyQueue[0].burst === 0) {
+                readyQueue.shift();
+            }
+        } else {
+            addItem("white");
+        }
+
+        await timeout(1000);
+    }
+
+    console.log("SJF scheduling stopped");
 }
